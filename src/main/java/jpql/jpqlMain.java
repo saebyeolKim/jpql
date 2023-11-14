@@ -24,14 +24,22 @@ public class jpqlMain {
             member.setUsername("TeamA");
             member.setAge(10);
             member.setTeam(team);
+            member.setType(MemberType.admin);
             em.persist(member);
 
             em.flush();
             em.clear();
 
-            String query = "select m from Member m left join m.team t on t.name = 'TeamA'";
-            List<Member> result = em.createQuery(query, Member.class)
+            String query = "select m.username, 'HELLO', TRUE from Member m " +
+                            "where m.type = :userType";
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("userType", MemberType.admin)
                     .getResultList();
+            for (Object[] objects : result) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
 
             tx.commit();    //커밋
         } catch (Exception e) {
