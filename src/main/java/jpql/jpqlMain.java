@@ -21,7 +21,7 @@ public class jpqlMain {
             em.persist(team);
 
             Member member = new Member();
-            member.setUsername("TeamA");
+            member.setUsername("관리자");
             member.setAge(10);
             member.setTeam(team);
             member.setType(MemberType.admin);
@@ -30,15 +30,11 @@ public class jpqlMain {
             em.flush();
             em.clear();
 
-            String query = "select m.username, 'HELLO', TRUE from Member m " +
-                            "where m.type = :userType";
-            List<Object[]> result = em.createQuery(query)
-                    .setParameter("userType", MemberType.admin)
+            String query = "select nullif(m.username, '관리자') from Member m";
+            List<String> resultList = em.createQuery(query, String.class)
                     .getResultList();
-            for (Object[] objects : result) {
-                System.out.println("objects[0] = " + objects[0]);
-                System.out.println("objects[1] = " + objects[1]);
-                System.out.println("objects[2] = " + objects[2]);
+            for (String s : resultList) {
+                System.out.println("s = " + s);
             }
 
             tx.commit();    //커밋
