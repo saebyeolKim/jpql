@@ -42,30 +42,12 @@ public class jpqlMain {
             em.flush();
             em.clear();
 
-            String query = "select m from Member m join fetch m.team";
-            List<Member> resultList = em.createQuery(query, Member.class)
-                    .getResultList();
-            for (Member member : resultList) {
-                System.out.println("s = " + member.getUsername() + ", " + member.getTeam().getName());
-                //회원1, 팀A(SQL)
-                //회원2, 팀A(1차캐시)
-                //회원3, 팀B(SQL)
+            String query = "select m from Member m where m = :member";
+            Member findMember = em.createQuery(query, Member.class)
+                    .setParameter("member", member1)
+                    .getSingleResult();
 
-                //회원100명 -> N(특정회원을 가져오기 위한 쿼리) + 1 (회원가져오기 위한 쿼리)
-                //이와 같이 효율성이 없기때문에 join fetch 를 사용, 사용하면 한방 쿼리로 조회
-            }
-
-            String query2 = "select distinct t from Team t join fetch t.members";
-            List<Team> resultList2 = em.createQuery(query2, Team.class)
-                    .getResultList();
-            for (Team team : resultList2) {
-                System.out.println("team = " + team.getName() + "|members= " + team.getMembers());
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member); //중복쿼리 발생, 팀의 개수는 2개인데 이렇게하면 3개가 나옴
-                    //distinct 를 사용해서 같은식별자를 가진 Team 엔티티 제거
-                }
-            }
-
+            System.out.println("findMember = " + findMember);
 
             tx.commit();    //커밋
         } catch (Exception e) {
