@@ -17,6 +17,7 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="10"/>
             <property name="hibernate.hbm2ddl.auto" value="create" /> <!-- 데이터베이스 스키마 자동 생성, 운영에는 validate 또는 none 만 사용 -->
+            <property name="hibernate.default_batch_fetch_size" value="100" />
         </properties>
     </persistence-unit>
 </persistence>
