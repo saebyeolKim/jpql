@@ -42,13 +42,12 @@ public class jpqlMain {
             em.flush();
             em.clear();
 
-            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-                    .setParameter("username", "회원1")
-                    .getResultList();
-
-            for (Member member : resultList) {
-                System.out.println("member = " + member);
-            }
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+            System.out.println("resultCount = " + resultCount);
+            //벌크 연산 주의
+            //1) 벌크 연산을 먼저 실행.
+            //2) 벌크 연산 수행 후 영속성 컨텍스트 초기화.
 
             tx.commit();    //커밋
         } catch (Exception e) {
